@@ -20,8 +20,8 @@
             </div>
           </template>
         </q-img>
-        <q-card-section>
-          <div class="climate-card__title text-h5">
+        <q-card-section class="q-pa-sm q-pa-md-md">
+          <div class="climate-card__title text-h6 text-weight-bold">
             {{ props.title }}
           </div>
           <div class="climate-card__category">
@@ -29,6 +29,8 @@
               :color="getCategoryColor(props.category)"
               text-color="white"
               size="sm"
+              class="q-px-sm"
+              dense
             >
               {{ props.category }}
             </q-chip>
@@ -36,14 +38,15 @@
         </q-card-section>
       </div>
       <div class="climate-card__back">
-        <q-card-section class="climate-card__content q-pa-lg">
+        <q-card-section class="climate-card__content">
           {{ props.backContent }}
           <q-btn
             flat
             round
+            dense
             color="primary"
             icon="refresh"
-            class="absolute-bottom-right q-mb-sm q-mr-sm"
+            class="absolute-bottom-right q-mb-xs q-mr-xs"
             @click.stop="emit('flip')"
           />
         </q-card-section>
@@ -74,7 +77,9 @@ const getCategoryColor = (category: string): string => {
     'Weather': 'purple-7',
     'Ice': 'cyan-7',
     'Ecosystem': 'green-7',
-    'Pollution': 'orange-7'
+    'Pollution': 'orange-7',
+    'Solutions': 'teal-7',
+    'Forests': 'light-green-7'
   };
   return colors[category] || 'grey-7';
 };
@@ -87,10 +92,18 @@ const getCategoryColor = (category: string): string => {
   height: 100%;
   cursor: pointer;
   transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  &:active {
+    transform: scale(0.98);
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
   }
 
   &__inner {
@@ -98,7 +111,7 @@ const getCategoryColor = (category: string): string => {
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
   }
 
@@ -132,26 +145,40 @@ const getCategoryColor = (category: string): string => {
 
   &__image {
     border-radius: 12px 12px 0 0;
+    height: 50%;
+    object-fit: cover;
   }
 
   &__title {
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+
+    @media (min-width: 600px) {
+      font-size: 1.25rem;
+    }
   }
 
   &__category {
     display: flex;
     justify-content: flex-start;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
   }
 
   &__content {
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    line-height: 1.4;
     color: #2c3e50;
     text-align: left;
     height: 100%;
     position: relative;
+    padding: 1rem;
+
+    @media (min-width: 600px) {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      padding: 1.5rem;
+    }
   }
 }
 </style> 

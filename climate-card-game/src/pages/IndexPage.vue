@@ -1,32 +1,41 @@
 <template>
-  <q-page class="q-pa-md">
+  <q-page class="q-pa-sm q-pa-md-md">
     <!-- Game Setup -->
-    <div v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown" class="text-center q-mb-lg">
-      <h4 class="text-h4 q-mb-md">Climate Change Memory Game</h4>
-      <div class="row justify-center q-gutter-md q-mb-lg">
-        <q-btn-group outline>
+    <div v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown" class="text-center q-mb-md">
+      <h4 class="text-h4 q-mb-md text-primary">Climate Change Memory Game</h4>
+      <div class="row justify-center q-gutter-sm q-mb-md">
+        <q-btn-group spread>
           <q-btn
-            :color="store.gameMode === 'easy' ? 'primary' : 'grey'"
-            label="Easy"
+            :color="store.gameMode === 'easy' ? 'primary' : 'grey-4'"
+            :text-color="store.gameMode === 'easy' ? 'white' : 'grey-8'"
+            :label="isMobileView ? 'Easy' : 'Easy'"
+            class="mode-btn"
             @click="selectMode('easy')"
           />
           <q-btn
-            :color="store.gameMode === 'medium' ? 'primary' : 'grey'"
-            label="Medium"
+            :color="store.gameMode === 'medium' ? 'primary' : 'grey-4'"
+            :text-color="store.gameMode === 'medium' ? 'white' : 'grey-8'"
+            :label="isMobileView ? 'Medium' : 'Medium'"
+            class="mode-btn"
             @click="selectMode('medium')"
           />
           <q-btn
-            :color="store.gameMode === 'hard' ? 'primary' : 'grey'"
-            label="Hard"
+            :color="store.gameMode === 'hard' ? 'primary' : 'grey-4'"
+            :text-color="store.gameMode === 'hard' ? 'white' : 'grey-8'"
+            :label="isMobileView ? 'Hard' : 'Hard'"
+            class="mode-btn"
             @click="selectMode('hard')"
           />
         </q-btn-group>
       </div>
       <q-btn
+        unelevated
+        rounded
         color="primary"
         icon="play_arrow"
         label="Start Game"
-        class="q-mt-md"
+        class="q-mt-sm q-px-xl"
+        size="lg"
         @click="startCountdown"
       />
     </div>
@@ -35,14 +44,14 @@
     <div v-if="isCountingDown" class="countdown-screen">
       <div class="text-center">
         <h2 class="text-h2 countdown-number">{{ countdownNumber }}</h2>
-        <p class="text-h5">Get Ready!</p>
+        <p class="text-h5 text-primary">Get Ready!</p>
       </div>
     </div>
 
     <!-- Game Board -->
     <div v-if="store.isPlaying" class="game-board">
       <!-- Timer Display -->
-      <div class="timer-display q-mb-lg">
+      <div class="timer-display q-mb-md">
         <q-card flat bordered class="timer-card">
           <q-card-section class="row items-center q-py-sm">
             <q-icon name="timer" size="2rem" color="primary" class="q-mr-md"/>
@@ -71,7 +80,8 @@
 
       <div class="text-center q-mt-md">
         <q-btn
-          flat
+          unelevated
+          rounded
           color="negative"
           icon="restart_alt"
           label="Reset Game"
@@ -83,19 +93,28 @@
     <!-- Game Complete Message -->
     <q-dialog v-model="showCompletionDialog" persistent>
       <q-card class="completion-card">
-        <q-card-section class="row items-center q-pb-none">
+        <q-card-section class="row items-center q-pb-none bg-primary text-white">
           <div class="text-h6">Congratulations! 🎉</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
-        <q-card-section>
-          <p>You've completed the game in {{ formatTime(currentTime) }}!</p>
-          <p>Would you like to play again?</p>
+        <q-card-section class="q-pt-lg">
+          <div class="text-center">
+            <p class="text-h6 q-mb-md">Time: {{ formatTime(currentTime) }}</p>
+            <p class="text-subtitle1">Would you like to play again?</p>
+          </div>
         </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn flat label="New Game" color="primary" @click="startNewGame" />
+        <q-card-actions align="center" class="q-pb-md">
+          <q-btn
+            unelevated
+            rounded
+            label="New Game"
+            color="primary"
+            class="q-px-xl"
+            @click="startNewGame"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -105,13 +124,19 @@
 <script setup lang="ts">
 import { useClimateStore } from '../stores/climate-store';
 import ClimateCard from '../components/ClimateCard.vue';
-import { onMounted, ref, watch, onUnmounted } from 'vue';
+import { onMounted, ref, watch, onUnmounted, computed } from 'vue';
+import { Platform } from 'quasar';
 
 const store = useClimateStore();
 const showCompletionDialog = ref(false);
 const isCountingDown = ref(false);
 const countdownNumber = ref(3);
 const currentTime = ref(0);
+
+// Check if mobile view
+const isMobileView = computed(() => {
+  return Platform.is.mobile || window.innerWidth < 600;
+});
 
 // Timer interval reference
 let timerInterval: ReturnType<typeof setInterval> | null = null;
@@ -207,21 +232,41 @@ onMounted(() => {
   margin: 0 auto;
 }
 
+.mode-btn {
+  min-width: 100px;
+  
+  @media (max-width: 599px) {
+    min-width: 60px;
+  }
+}
+
 .timer-display {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
 }
 
 .timer-card {
-  min-width: 200px;
-  background: rgba(255, 255, 255, 0.9);
+  min-width: 180px;
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   .q-card__section {
-    padding: 0.5rem 2rem;
+    padding: 0.5rem 1.5rem;
+  }
+
+  @media (max-width: 599px) {
+    min-width: 140px;
+    
+    .text-h4 {
+      font-size: 1.5rem;
+    }
+
+    .q-icon {
+      font-size: 1.5rem !important;
+    }
   }
 }
 
@@ -234,7 +279,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   z-index: 9999;
 }
 
@@ -243,6 +288,11 @@ onMounted(() => {
   font-weight: bold;
   color: var(--q-primary);
   animation: pulse 1s infinite;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 599px) {
+    font-size: 5rem;
+  }
 }
 
 @keyframes pulse {
@@ -260,22 +310,36 @@ onMounted(() => {
 .cards-container {
   position: relative;
   width: 100%;
-  padding: 1rem 0;
+  padding: 0.5rem;
+
+  @media (min-width: 600px) {
+    padding: 1rem 0;
+  }
 }
 
 .cards-scroll {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
+
+  @media (min-width: 600px) {
+    gap: 1rem;
+    padding: 1rem;
+  }
 }
 
 .card-wrapper {
   flex: 0 0 auto;
-  width: 300px;
-  height: 400px;
+  width: calc(50% - 0.5rem);
+  height: 200px;
   transition: all 0.3s ease;
+
+  @media (min-width: 600px) {
+    width: 300px;
+    height: 400px;
+  }
 
   &:hover {
     transform: scale(1.02);
@@ -287,8 +351,13 @@ onMounted(() => {
 }
 
 .completion-card {
-  min-width: 300px;
+  width: 90%;
   max-width: 400px;
+  border-radius: 12px;
+
+  .q-card__section:first-child {
+    border-radius: 12px 12px 0 0;
+  }
 }
 
 @keyframes matchedAnimation {
@@ -303,26 +372,6 @@ onMounted(() => {
   100% {
     transform: scale(0);
     opacity: 0;
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 600px) {
-  .card-wrapper {
-    width: 250px;
-    height: 350px;
-  }
-
-  .countdown-number {
-    font-size: 6rem;
-  }
-
-  .timer-card {
-    min-width: 150px;
-
-    .text-h4 {
-      font-size: 1.5rem;
-    }
   }
 }
 </style>
