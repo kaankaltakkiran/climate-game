@@ -41,8 +41,14 @@
 
     <!-- Game Board -->
     <div v-if="store.isPlaying" class="game-board">
-      <div class="text-center q-mb-md">
-        <h5 class="text-h5">Time: {{ formatTime(store.gameTimeInSeconds) }}</h5>
+      <!-- Timer Display -->
+      <div class="timer-display q-mb-lg">
+        <q-card flat bordered class="timer-card">
+          <q-card-section class="row items-center q-py-sm">
+            <q-icon name="timer" size="2rem" color="primary" class="q-mr-md"/>
+            <div class="text-h4 text-primary">{{ formatTime(currentTime) }}</div>
+          </q-card-section>
+        </q-card>
       </div>
 
       <div class="cards-container">
@@ -84,7 +90,7 @@
         </q-card-section>
 
         <q-card-section>
-          <p>You've completed the game in {{ formatTime(store.gameTimeInSeconds) }}!</p>
+          <p>You've completed the game in {{ formatTime(currentTime) }}!</p>
           <p>Would you like to play again?</p>
         </q-card-section>
 
@@ -99,18 +105,39 @@
 <script setup lang="ts">
 import { useClimateStore } from '../stores/climate-store';
 import ClimateCard from '../components/ClimateCard.vue';
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch, onUnmounted } from 'vue';
 
 const store = useClimateStore();
 const showCompletionDialog = ref(false);
 const isCountingDown = ref(false);
 const countdownNumber = ref(3);
+const currentTime = ref(0);
+
+// Timer interval reference
+let timerInterval: ReturnType<typeof setInterval> | null = null;
 
 // Format time function
 const formatTime = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs.toString().padStart(2, '0')}`;
+};
+
+// Start timer function
+const startTimer = () => {
+  if (timerInterval) clearInterval(timerInterval);
+  currentTime.value = 0;
+  timerInterval = setInterval(() => {
+    currentTime.value++;
+  }, 1000);
+};
+
+// Stop timer function
+const stopTimer = () => {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
 };
 
 // Game functions
@@ -141,10 +168,12 @@ const startGame = () => {
   store.cards.forEach(card => card.isFlipped = true);
   setTimeout(() => {
     store.cards.forEach(card => card.isFlipped = false);
+    startTimer(); // Start the timer after cards are flipped back
   }, 3000);
 };
 
 const resetGame = () => {
+  stopTimer();
   store.resetCards();
 };
 
@@ -156,8 +185,14 @@ const startNewGame = () => {
 // Watch for game completion
 watch(() => store.isGameComplete, (isComplete) => {
   if (isComplete) {
+    stopTimer();
     showCompletionDialog.value = true;
   }
+});
+
+// Clean up on component unmount
+onUnmounted(() => {
+  stopTimer();
 });
 
 // Initialize game on mount
@@ -170,6 +205,24 @@ onMounted(() => {
 .game-board {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.timer-display {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.timer-card {
+  min-width: 200px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  .q-card__section {
+    padding: 0.5rem 2rem;
+  }
 }
 
 .countdown-screen {
@@ -262,6 +315,14 @@ onMounted(() => {
 
   .countdown-number {
     font-size: 6rem;
+  }
+
+  .timer-card {
+    min-width: 150px;
+
+    .text-h4 {
+      font-size: 1.5rem;
+    }
   }
 }
 </style>
