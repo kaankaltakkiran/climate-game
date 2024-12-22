@@ -1,8 +1,9 @@
 <template>
-  <div
+  <q-card
     class="climate-card"
     :class="{ 'is-flipped': props.isFlipped }"
     @click="emit('flip')"
+    v-ripple
   >
     <div class="climate-card__inner">
       <div class="climate-card__front">
@@ -10,21 +11,45 @@
           :src="props.frontImage"
           :ratio="16/9"
           class="climate-card__image"
-        />
-        <div class="climate-card__title">
-          {{ props.title }}
-        </div>
-        <div class="climate-card__category">
-          {{ props.category }}
-        </div>
+          spinner-color="primary"
+          spinner-size="82px"
+        >
+          <template v-slot:loading>
+            <div class="text-subtitle1 text-white">
+              Loading...
+            </div>
+          </template>
+        </q-img>
+        <q-card-section>
+          <div class="climate-card__title text-h5">
+            {{ props.title }}
+          </div>
+          <div class="climate-card__category">
+            <q-chip
+              :color="getCategoryColor(props.category)"
+              text-color="white"
+              size="sm"
+            >
+              {{ props.category }}
+            </q-chip>
+          </div>
+        </q-card-section>
       </div>
       <div class="climate-card__back">
-        <div class="climate-card__content">
+        <q-card-section class="climate-card__content q-pa-lg">
           {{ props.backContent }}
-        </div>
+          <q-btn
+            flat
+            round
+            color="primary"
+            icon="refresh"
+            class="absolute-bottom-right q-mb-sm q-mr-sm"
+            @click.stop="emit('flip')"
+          />
+        </q-card-section>
       </div>
     </div>
-  </div>
+  </q-card>
 </template>
 
 <script setup lang="ts">
@@ -41,6 +66,18 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   flip: [] // event with no payload
 }>();
+
+const getCategoryColor = (category: string): string => {
+  const colors: Record<string, string> = {
+    'Disasters': 'red-7',
+    'Ocean': 'blue-7',
+    'Weather': 'purple-7',
+    'Ice': 'cyan-7',
+    'Ecosystem': 'green-7',
+    'Pollution': 'orange-7'
+  };
+  return colors[category] || 'grey-7';
+};
 </script>
 
 <style lang="scss">
@@ -49,13 +86,19 @@ const emit = defineEmits<{
   width: 100%;
   height: 100%;
   cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
 
   &__inner {
     position: relative;
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 0.8s;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
   }
 
@@ -70,8 +113,8 @@ const emit = defineEmits<{
     height: 100%;
     backface-visibility: hidden;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background: white;
+    overflow: hidden;
   }
 
   &__front {
@@ -84,7 +127,6 @@ const emit = defineEmits<{
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
     background: #f7f7f7;
   }
 
@@ -93,22 +135,23 @@ const emit = defineEmits<{
   }
 
   &__title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    padding: 1rem;
-    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
   }
 
   &__category {
-    font-size: 0.9rem;
-    color: #666;
-    padding-bottom: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0.5rem;
   }
 
   &__content {
     font-size: 1.1rem;
     line-height: 1.6;
     color: #2c3e50;
+    text-align: left;
+    height: 100%;
+    position: relative;
   }
 }
 </style> 
