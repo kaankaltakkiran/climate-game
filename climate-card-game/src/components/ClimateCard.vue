@@ -25,15 +25,20 @@
             {{ props.title }}
           </div>
           <div class="climate-card__category">
-            <q-chip
+            <q-badge
               :color="getCategoryColor(props.category)"
-              text-color="white"
-              size="sm"
-              class="q-px-sm"
-              dense
+              :class="getCategoryClass(props.category)"
+              class="category-badge"
+              rounded
+              outline
             >
+              <q-icon
+                :name="getCategoryIcon(props.category)"
+                size="14px"
+                class="q-mr-xs"
+              />
               {{ props.category }}
-            </q-chip>
+            </q-badge>
           </div>
         </q-card-section>
       </div>
@@ -72,16 +77,24 @@ const emit = defineEmits<{
 
 const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
-    'Disasters': 'red-7',
-    'Ocean': 'blue-7',
-    'Weather': 'purple-7',
-    'Ice': 'cyan-7',
-    'Ecosystem': 'green-7',
-    'Pollution': 'orange-7',
-    'Solutions': 'teal-7',
-    'Forests': 'light-green-7'
+    'Neden': 'red',
+    'Sonuç': 'orange',
+    'Çözüm': 'green'
   };
   return colors[category] || 'grey-7';
+};
+
+const getCategoryClass = (category: string): string => {
+  return `category-${category.toLowerCase()}`;
+};
+
+const getCategoryIcon = (category: string): string => {
+  const icons: Record<string, string> = {
+    'Neden': 'warning',
+    'Sonuç': 'insights',
+    'Çözüm': 'eco'
+  };
+  return icons[category] || 'label';
 };
 </script>
 
@@ -152,7 +165,7 @@ const getCategoryColor = (category: string): string => {
   &__title {
     font-size: 1rem;
     line-height: 1.2;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
 
     @media (min-width: 600px) {
       font-size: 1.25rem;
@@ -162,7 +175,7 @@ const getCategoryColor = (category: string): string => {
   &__category {
     display: flex;
     justify-content: flex-start;
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
   }
 
   &__content {
@@ -179,6 +192,37 @@ const getCategoryColor = (category: string): string => {
       line-height: 1.6;
       padding: 1.5rem;
     }
+  }
+}
+
+.category-badge {
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 20px;
+  
+  &.category-neden {
+    color: #fff !important;
+    background: linear-gradient(135deg, #ff4444 0%, #ff6b6b 100%);
+    border: none;
+  }
+  
+  &.category-sonuç {
+    color: #fff !important;
+    background: linear-gradient(135deg, #ff9f43 0%, #ffbe76 100%);
+    border: none;
+  }
+  
+  &.category-çözüm {
+    color: #fff !important;
+    background: linear-gradient(135deg, #2ecc71 0%, #55efc4 100%);
+    border: none;
+  }
+
+  .q-icon {
+    opacity: 0.9;
   }
 }
 </style> 

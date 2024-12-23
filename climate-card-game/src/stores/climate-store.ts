@@ -1,54 +1,118 @@
 import { defineStore } from 'pinia';
 import type { ClimateCard, GameState } from '../types/climate-card';
 
+// Her kart çifti birbiriyle ilişkili iklim sorunlarını veya neden-sonuç ilişkilerini temsil eder
 const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[] = [
+  // Çift 1: Fosil Yakıtlar → Küresel Isınma
   {
-    title: 'Forest Fires',
-    frontImage: 'https://source.unsplash.com/800x600/?forest,fire',
-    backContent: 'Forest fires are becoming more frequent and intense due to climate change.',
-    category: 'Disasters'
+    title: 'Fosil Yakıt Kullanımı',
+    frontImage: 'https://source.unsplash.com/800x600/?factory,smoke',
+    backContent: 'Kömür, petrol ve doğal gaz gibi fosil yakıtların yakılması atmosfere sera gazları salar.',
+    category: 'Neden'
   },
   {
-    title: 'Rising Sea Levels',
-    frontImage: 'https://source.unsplash.com/800x600/?ocean,flood',
-    backContent: 'Rising sea levels threaten coastal communities worldwide.',
-    category: 'Ocean'
+    title: 'Küresel Isınma',
+    frontImage: 'https://source.unsplash.com/800x600/?thermometer,heat',
+    backContent: 'Atmosferdeki sera gazları ısıyı hapsederek dünya sıcaklığının artmasına neden olur.',
+    category: 'Sonuç'
   },
+
+  // Çift 2: Ormansızlaşma → Tür Yok Oluşu
   {
-    title: 'Extreme Weather',
-    frontImage: 'https://source.unsplash.com/800x600/?storm,hurricane',
-    backContent: 'Climate change increases extreme weather events frequency.',
-    category: 'Weather'
-  },
-  {
-    title: 'Melting Glaciers',
-    frontImage: 'https://source.unsplash.com/800x600/?glacier,melting',
-    backContent: 'Glaciers are melting at unprecedented rates.',
-    category: 'Ice'
-  },
-  {
-    title: 'Biodiversity Loss',
-    frontImage: 'https://source.unsplash.com/800x600/?endangered,species',
-    backContent: 'Climate change causes mass extinction of species.',
-    category: 'Ecosystem'
-  },
-  {
-    title: 'Carbon Emissions',
-    frontImage: 'https://source.unsplash.com/800x600/?factory,pollution',
-    backContent: 'Carbon emissions are the primary driver of climate change.',
-    category: 'Pollution'
-  },
-  {
-    title: 'Renewable Energy',
-    frontImage: 'https://source.unsplash.com/800x600/?solar,wind',
-    backContent: 'Clean energy solutions help combat climate change.',
-    category: 'Solutions'
-  },
-  {
-    title: 'Deforestation',
+    title: 'Ormansızlaşma',
     frontImage: 'https://source.unsplash.com/800x600/?deforestation',
-    backContent: 'Deforestation contributes to global warming.',
-    category: 'Forests'
+    backContent: 'Ormanların yok edilmesi, doğal yaşam alanlarını tahrip eder ve karbon emilimini azaltır.',
+    category: 'Neden'
+  },
+  {
+    title: 'Türlerin Yok Oluşu',
+    frontImage: 'https://source.unsplash.com/800x600/?endangered,animal',
+    backContent: 'Yaşam alanlarının kaybı, birçok hayvan ve bitki türünün neslinin tükenmesine yol açar.',
+    category: 'Sonuç'
+  },
+
+  // Çift 3: Okyanus Isınması → Mercan Ağartması
+  {
+    title: 'Okyanus Isınması',
+    frontImage: 'https://source.unsplash.com/800x600/?ocean,warming',
+    backContent: 'Küresel ısınma nedeniyle okyanus suları giderek ısınıyor ve asitlenme artıyor.',
+    category: 'Neden'
+  },
+  {
+    title: 'Mercan Ağartması',
+    frontImage: 'https://source.unsplash.com/800x600/?coral,reef',
+    backContent: 'Isınan sular mercanların renklerini kaybetmesine ve ölmesine neden oluyor.',
+    category: 'Sonuç'
+  },
+
+  // Çift 4: Kutup Buzulları → Deniz Seviyesi
+  {
+    title: 'Buzulların Erimesi',
+    frontImage: 'https://source.unsplash.com/800x600/?arctic,melting',
+    backContent: 'Artan sıcaklıklar kutuplardaki ve dağlardaki buzulların hızla erimesine neden oluyor.',
+    category: 'Neden'
+  },
+  {
+    title: 'Yükselen Denizler',
+    frontImage: 'https://source.unsplash.com/800x600/?flood,coastal',
+    backContent: 'Eriyen buzullar deniz seviyesinin yükselmesine ve kıyı bölgelerinin sular altında kalmasına yol açıyor.',
+    category: 'Sonuç'
+  },
+
+  // Çift 5: Atmosferik Değişimler → Aşırı Hava Olayları
+  {
+    title: 'İklim Değişikliği',
+    frontImage: 'https://source.unsplash.com/800x600/?atmosphere,clouds',
+    backContent: 'Atmosferdeki değişimler hava akımlarını ve okyanus akıntılarını etkiliyor.',
+    category: 'Neden'
+  },
+  {
+    title: 'Aşırı Hava Olayları',
+    frontImage: 'https://source.unsplash.com/800x600/?hurricane,storm',
+    backContent: 'Fırtınalar, seller ve kuraklıklar gibi aşırı hava olayları daha sık ve şiddetli hale geliyor.',
+    category: 'Sonuç'
+  },
+
+  // Çift 6: İklim Desenleri → Gıda Güvenliği
+  {
+    title: 'Değişen Yağış Düzeni',
+    frontImage: 'https://source.unsplash.com/800x600/?drought,climate',
+    backContent: 'İklim değişikliği yağış düzenlerini değiştiriyor ve mevsimsel döngüleri bozuyor.',
+    category: 'Neden'
+  },
+  {
+    title: 'Gıda Krizi',
+    frontImage: 'https://source.unsplash.com/800x600/?crops,farming',
+    backContent: 'Düzensiz yağışlar ve aşırı sıcaklıklar tarımsal üretimi tehdit ediyor ve gıda krizine yol açıyor.',
+    category: 'Sonuç'
+  },
+
+  // Çift 7: Kentleşme → Isı Adası
+  {
+    title: 'Çarpık Kentleşme',
+    frontImage: 'https://source.unsplash.com/800x600/?city,concrete',
+    backContent: 'Betonlaşma ve yeşil alanların azalması şehirlerde ısı birikimini artırıyor.',
+    category: 'Neden'
+  },
+  {
+    title: 'Kent Isı Adaları',
+    frontImage: 'https://source.unsplash.com/800x600/?city,heat',
+    backContent: 'Şehir merkezleri çevre bölgelerden çok daha sıcak hale geliyor ve yaşam kalitesi düşüyor.',
+    category: 'Sonuç'
+  },
+
+  // Çift 8: Çözümler (Yenilenebilir Enerji ve Karbon Azaltımı)
+  {
+    title: 'Yenilenebilir Enerji',
+    frontImage: 'https://source.unsplash.com/800x600/?solar,wind',
+    backContent: 'Güneş ve rüzgar gibi temiz enerji kaynakları karbon emisyonlarını azaltmaya yardımcı olur.',
+    category: 'Çözüm'
+  },
+  {
+    title: 'Sürdürülebilir Yaşam',
+    frontImage: 'https://source.unsplash.com/800x600/?electric,car',
+    backContent: 'Elektrikli araçlar ve enerji tasarruflu teknolojiler iklim değişikliğiyle mücadeleye katkı sağlar.',
+    category: 'Çözüm'
   }
 ];
 
@@ -81,36 +145,41 @@ export const useClimateStore = defineStore('climate', {
   actions: {
     initializeGame(mode: 'easy' | 'medium' | 'hard') {
       this.gameMode = mode;
+      // Zorluk seviyesine göre kart sayısını ayarla
       const pairsCount = mode === 'easy' ? 4 : mode === 'medium' ? 6 : 8;
       this.totalPairs = pairsCount;
       
-      // Shuffle and select cards based on mode
-      const shuffledCards = [...allCards]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, pairsCount);
+      // Kartları seç ve çiftleri oluştur
+      const selectedCards = [...allCards].slice(0, pairsCount * 2);
+      const pairs: Array<[typeof selectedCards[0], typeof selectedCards[1]]> = [];
+      
+      // Neden-Sonuç çiftlerini oluştur
+      for (let i = 0; i < selectedCards.length; i += 2) {
+        pairs.push([selectedCards[i], selectedCards[i + 1]]);
+      }
 
-      // Create pairs of cards with guaranteed type safety
-      const cardPairs: ClimateCard[] = shuffledCards.flatMap((card, index) => {
-        const baseCard: ClimateCard = {
+      // Her çift için kartları oluştur
+      const cardPairs: ClimateCard[] = pairs.flatMap((pair, pairIndex) => 
+        pair.map((card, cardIndex) => ({
           ...card,
-          id: index * 2 + 1,
+          id: pairIndex * 2 + cardIndex + 1,
           isFlipped: false,
           isMatched: false,
-          matchId: index
-        };
-        const pairCard: ClimateCard = {
-          ...card,
-          id: index * 2 + 2,
-          isFlipped: false,
-          isMatched: false,
-          matchId: index
-        };
-        return [baseCard, pairCard];
-      });
+          matchId: pairIndex // Her çift aynı matchId'yi paylaşır
+        }))
+      );
 
-      // Final shuffle of all cards
+      // Son kez kartları karıştır
       this.cards = cardPairs.sort(() => Math.random() - 0.5);
       this.resetGameState();
+    },
+
+    startGame() {
+      this.isPlaying = true;
+      this.startTime = Date.now();
+      this.endTime = null;
+      this.flippedCards = [];
+      this.matchedPairs = 0;
     },
 
     resetGameState() {
@@ -121,91 +190,48 @@ export const useClimateStore = defineStore('climate', {
       this.matchedPairs = 0;
     },
 
-    startGame() {
-      this.isPlaying = true;
-      this.startTime = Date.now();
-      this.endTime = null;
+    resetCards() {
+      this.cards.forEach(card => {
+        card.isFlipped = false;
+        card.isMatched = false;
+      });
+      this.resetGameState();
     },
 
-    toggleCard(id: number) {
-      if (!this.isPlaying) {
-        this.startGame();
-      }
-
-      const cardIndex = this.cards.findIndex(c => c.id === id);
-      if (cardIndex === -1) return;
-
-      const currentCard = this.cards[cardIndex];
-      // Early return if card is not in a valid state for flipping
-      if (!currentCard || currentCard.isMatched || currentCard.isFlipped || this.flippedCards.length >= 2) {
-        return;
-      }
-
-      // Update the card in the array with type safety
-      this.cards[cardIndex] = {
-        id: currentCard.id,
-        title: currentCard.title,
-        frontImage: currentCard.frontImage,
-        backContent: currentCard.backContent,
-        category: currentCard.category,
-        matchId: currentCard.matchId,
-        isMatched: currentCard.isMatched,
-        isFlipped: true
-      };
+    toggleCard(cardId: number) {
+      if (!this.isPlaying) return;
       
-      this.flippedCards.push(id);
+      const card = this.cards.find(c => c.id === cardId);
+      if (!card || card.isMatched || card.isFlipped || this.flippedCards.length >= 2) return;
 
-      // Check for match when two cards are flipped
+      card.isFlipped = true;
+      this.flippedCards.push(cardId);
+
       if (this.flippedCards.length === 2) {
         const [firstId, secondId] = this.flippedCards;
         const firstCard = this.cards.find(c => c.id === firstId);
         const secondCard = this.cards.find(c => c.id === secondId);
 
         if (firstCard && secondCard && firstCard.matchId === secondCard.matchId) {
-          // Match found
+          // Eşleşme başarılı - kartları 1 saniye göster
           setTimeout(() => {
-            this.cards = this.cards.map(c => {
-              if (c.id === firstId || c.id === secondId) {
-                return {
-                  ...c,
-                  isMatched: true
-                };
-              }
-              return c;
-            });
+            firstCard.isMatched = true;
+            secondCard.isMatched = true;
             this.matchedPairs++;
-            this.flippedCards = [];
 
-            // Check if game is complete
             if (this.matchedPairs === this.totalPairs) {
               this.endTime = Date.now();
             }
-          }, 500);
+          }, 1000); // 000ms = 1 saniye
         } else {
-          // No match, flip cards back
+          // Eşleşme başarısız - kartları 1.5 saniye göster
           setTimeout(() => {
-            this.cards = this.cards.map(c => {
-              if (this.flippedCards.includes(c.id)) {
-                return {
-                  ...c,
-                  isFlipped: false
-                };
-              }
-              return c;
-            });
-            this.flippedCards = [];
-          }, 1000);
+            if (firstCard) firstCard.isFlipped = false;
+            if (secondCard) secondCard.isFlipped = false;
+          }, 1500); // Eşleşmeyen kartları görmek için daha fazla süre
         }
+        this.flippedCards = [];
       }
-    },
-
-    resetCards() {
-      this.cards = this.cards.map(card => ({
-        ...card,
-        isFlipped: false,
-        isMatched: false
-      }));
-      this.resetGameState();
     }
   }
 }); 
