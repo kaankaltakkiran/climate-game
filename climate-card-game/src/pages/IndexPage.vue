@@ -1,27 +1,30 @@
 <template>
-  <q-page class="q-pa-sm q-pa-md-md">
+  <q-page class="game-page q-pa-sm q-pa-md-md">
+    <!-- Background Pattern -->
+    <div class="background-pattern"></div>
+
     <!-- Game Setup -->
-    <div v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown" class="text-center q-mb-md">
-      <h4 class="text-h4 q-mb-md text-primary">Climate Change Memory Game</h4>
+    <div v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown" class="text-center q-mb-md setup-container">
+      <h4 class="text-h4 q-mb-md text-white">Climate Change Memory Game</h4>
       <div class="row justify-center q-gutter-sm q-mb-md">
         <q-btn-group spread>
           <q-btn
-            :color="store.gameMode === 'easy' ? 'primary' : 'grey-4'"
-            :text-color="store.gameMode === 'easy' ? 'white' : 'grey-8'"
+            :color="store.gameMode === 'easy' ? 'white' : 'grey-2'"
+            :text-color="store.gameMode === 'easy' ? 'primary' : 'grey-8'"
             :label="isMobileView ? 'Easy' : 'Easy'"
             class="mode-btn"
             @click="selectMode('easy')"
           />
           <q-btn
-            :color="store.gameMode === 'medium' ? 'primary' : 'grey-4'"
-            :text-color="store.gameMode === 'medium' ? 'white' : 'grey-8'"
+            :color="store.gameMode === 'medium' ? 'white' : 'grey-2'"
+            :text-color="store.gameMode === 'medium' ? 'primary' : 'grey-8'"
             :label="isMobileView ? 'Medium' : 'Medium'"
             class="mode-btn"
             @click="selectMode('medium')"
           />
           <q-btn
-            :color="store.gameMode === 'hard' ? 'primary' : 'grey-4'"
-            :text-color="store.gameMode === 'hard' ? 'white' : 'grey-8'"
+            :color="store.gameMode === 'hard' ? 'white' : 'grey-2'"
+            :text-color="store.gameMode === 'hard' ? 'primary' : 'grey-8'"
             :label="isMobileView ? 'Hard' : 'Hard'"
             class="mode-btn"
             @click="selectMode('hard')"
@@ -31,10 +34,11 @@
       <q-btn
         unelevated
         rounded
-        color="primary"
+        color="white"
+        text-color="primary"
         icon="play_arrow"
         label="Start Game"
-        class="q-mt-sm q-px-xl"
+        class="q-mt-sm q-px-xl start-btn"
         size="lg"
         @click="startCountdown"
       />
@@ -227,16 +231,60 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.game-page {
+  min-height: 100vh;
+  position: relative;
+  background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+  overflow: hidden;
+}
+
+.background-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.2) 2%, transparent 0%),
+    radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.2) 2%, transparent 0%);
+  background-size: 100px 100px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.setup-container {
+  position: relative;
+  z-index: 1;
+}
+
 .game-board {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
 }
 
 .mode-btn {
   min-width: 100px;
+  font-weight: 600;
   
   @media (max-width: 599px) {
     min-width: 60px;
+  }
+}
+
+.start-btn {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   }
 }
 
@@ -311,6 +359,7 @@ onMounted(() => {
   position: relative;
   width: 100%;
   padding: 0.5rem;
+  z-index: 1;
 
   @media (min-width: 600px) {
     padding: 1rem 0;
@@ -346,7 +395,7 @@ onMounted(() => {
   }
 
   &.matched {
-    animation: matchedAnimation 0.5s ease-out forwards;
+    animation: matchedAnimation 1.5s ease-out forwards;
   }
 }
 
@@ -354,6 +403,8 @@ onMounted(() => {
   width: 90%;
   max-width: 400px;
   border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
 
   .q-card__section:first-child {
     border-radius: 12px 12px 0 0;

@@ -201,9 +201,15 @@ export const useClimateStore = defineStore('climate', {
     toggleCard(cardId: number) {
       if (!this.isPlaying) return;
       
+      // Prevent flipping if two cards are already flipped or the clicked card is already flipped/matched
       const card = this.cards.find(c => c.id === cardId);
-      if (!card || card.isMatched || card.isFlipped || this.flippedCards.length >= 2) return;
+      if (!card || 
+          card.isMatched || 
+          card.isFlipped || 
+          this.flippedCards.length >= 2 ||
+          this.flippedCards.includes(cardId)) return;
 
+      // Flip the card
       card.isFlipped = true;
       this.flippedCards.push(cardId);
 
@@ -213,24 +219,25 @@ export const useClimateStore = defineStore('climate', {
         const secondCard = this.cards.find(c => c.id === secondId);
 
         if (firstCard && secondCard && firstCard.matchId === secondCard.matchId) {
-          // Eşleşme başarılı - kartları 1 saniye göster
+          // Eşleşme başarılı - kartları 3 saniye göster
           setTimeout(() => {
             firstCard.isMatched = true;
             secondCard.isMatched = true;
             this.matchedPairs++;
+            this.flippedCards = []; // Clear flipped cards array
 
             if (this.matchedPairs === this.totalPairs) {
               this.endTime = Date.now();
             }
-          }, 1000); // 000ms = 1 saniye
+          }, 3000); // 3000ms = 3 saniye
         } else {
           // Eşleşme başarısız - kartları 1.5 saniye göster
           setTimeout(() => {
             if (firstCard) firstCard.isFlipped = false;
             if (secondCard) secondCard.isFlipped = false;
+            this.flippedCards = []; // Clear flipped cards array
           }, 1500); // Eşleşmeyen kartları görmek için daha fazla süre
         }
-        this.flippedCards = [];
       }
     }
   }
