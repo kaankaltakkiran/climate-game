@@ -6,6 +6,10 @@ Bu proje, iklim değişikliği konusunda farkındalık yaratmak amacıyla geliş
 
 İklim Değişikliği Hafıza Oyunu, klasik eşleştirme oyununun eğitici bir versiyonudur. Her kart çifti, iklim değişikliğiyle ilgili bir neden-sonuç ilişkisini temsil eder.
 
+## 🌐 Web Sitesi
+
+ [Linke tıklayarak oyunu oynayabilirsiniz.](https://pangea-climate-card-game.netlify.app/#/)
+
 ### Zorluk Seviyeleri
 
 - **Kolay**: 4 çift (8 kart) - Temel iklim kavramları
