@@ -6,13 +6,13 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
   // Çift 1: Fosil Yakıtlar → Küresel Isınma
   {
     title: 'Fosil Yakıt Kullanımı',
-    frontImage: 'https://source.unsplash.com/800x600/?factory,smoke',
+    frontImage: 'https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?w=800&auto=format&fit=crop',
     backContent: 'Kömür, petrol ve doğal gaz gibi fosil yakıtların yakılması atmosfere sera gazları salar.',
     category: 'Neden'
   },
   {
     title: 'Küresel Isınma',
-    frontImage: 'https://source.unsplash.com/800x600/?thermometer,heat',
+    frontImage: 'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=800&auto=format&fit=crop',
     backContent: 'Atmosferdeki sera gazları ısıyı hapsederek dünya sıcaklığının artmasına neden olur.',
     category: 'Sonuç'
   },
@@ -20,13 +20,13 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
   // Çift 2: Ormansızlaşma → Tür Yok Oluşu
   {
     title: 'Ormansızlaşma',
-    frontImage: 'https://source.unsplash.com/800x600/?deforestation',
+    frontImage: 'https://images.unsplash.com/photo-1623111396948-0d98a1de5d48?w=800&auto=format&fit=crop',
     backContent: 'Ormanların yok edilmesi, doğal yaşam alanlarını tahrip eder ve karbon emilimini azaltır.',
     category: 'Neden'
   },
   {
     title: 'Türlerin Yok Oluşu',
-    frontImage: 'https://source.unsplash.com/800x600/?endangered,animal',
+    frontImage: 'https://images.unsplash.com/photo-1535338454770-8be927b5a00b?w=800&auto=format&fit=crop',
     backContent: 'Yaşam alanlarının kaybı, birçok hayvan ve bitki türünün neslinin tükenmesine yol açar.',
     category: 'Sonuç'
   },
@@ -34,13 +34,13 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
   // Çift 3: Okyanus Isınması → Mercan Ağartması
   {
     title: 'Okyanus Isınması',
-    frontImage: 'https://source.unsplash.com/800x600/?ocean,warming',
+    frontImage: 'https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=800&auto=format&fit=crop',
     backContent: 'Küresel ısınma nedeniyle okyanus suları giderek ısınıyor ve asitlenme artıyor.',
     category: 'Neden'
   },
   {
     title: 'Mercan Ağartması',
-    frontImage: 'https://source.unsplash.com/800x600/?coral,reef',
+    frontImage: 'https://images.unsplash.com/photo-1546026423-cc4642628d2b?w=800&auto=format&fit=crop',
     backContent: 'Isınan sular mercanların renklerini kaybetmesine ve ölmesine neden oluyor.',
     category: 'Sonuç'
   },
@@ -48,13 +48,13 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
   // Çift 4: Kutup Buzulları → Deniz Seviyesi
   {
     title: 'Buzulların Erimesi',
-    frontImage: 'https://source.unsplash.com/800x600/?arctic,melting',
+    frontImage: 'https://images.unsplash.com/photo-1524781289445-ddf8f5695861?w=800&auto=format&fit=crop',
     backContent: 'Artan sıcaklıklar kutuplardaki ve dağlardaki buzulların hızla erimesine neden oluyor.',
     category: 'Neden'
   },
   {
     title: 'Yükselen Denizler',
-    frontImage: 'https://source.unsplash.com/800x600/?flood,coastal',
+    frontImage: 'https://images.unsplash.com/photo-1533669955142-6a73332af4db?w=800&auto=format&fit=crop',
     backContent: 'Eriyen buzullar deniz seviyesinin yükselmesine ve kıyı bölgelerinin sular altında kalmasına yol açıyor.',
     category: 'Sonuç'
   },
@@ -62,13 +62,13 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
   // Çift 5: Atmosferik Değişimler → Aşırı Hava Olayları
   {
     title: 'İklim Değişikliği',
-    frontImage: 'https://source.unsplash.com/800x600/?atmosphere,clouds',
+    frontImage: 'https://images.unsplash.com/photo-1581075323069-c35e42c83cdf?w=800&auto=format&fit=crop',
     backContent: 'Atmosferdeki değişimler hava akımlarını ve okyanus akıntılarını etkiliyor.',
     category: 'Neden'
   },
   {
     title: 'Aşırı Hava Olayları',
-    frontImage: 'https://source.unsplash.com/800x600/?hurricane,storm',
+    frontImage: 'https://images.unsplash.com/photo-1527482937786-6608f6e14c15?w=800&auto=format&fit=crop',
     backContent: 'Fırtınalar, seller ve kuraklıklar gibi aşırı hava olayları daha sık ve şiddetli hale geliyor.',
     category: 'Sonuç'
   },
@@ -76,13 +76,13 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
   // Çift 6: İklim Desenleri → Gıda Güvenliği
   {
     title: 'Değişen Yağış Düzeni',
-    frontImage: 'https://source.unsplash.com/800x600/?drought,climate',
+    frontImage: 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=800&auto=format&fit=crop',
     backContent: 'İklim değişikliği yağış düzenlerini değiştiriyor ve mevsimsel döngüleri bozuyor.',
     category: 'Neden'
   },
   {
     title: 'Gıda Krizi',
-    frontImage: 'https://source.unsplash.com/800x600/?crops,farming',
+    frontImage: 'https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=800&auto=format&fit=crop',
     backContent: 'Düzensiz yağışlar ve aşırı sıcaklıklar tarımsal üretimi tehdit ediyor ve gıda krizine yol açıyor.',
     category: 'Sonuç'
   },
@@ -90,27 +90,27 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
   // Çift 7: Kentleşme → Isı Adası
   {
     title: 'Çarpık Kentleşme',
-    frontImage: 'https://source.unsplash.com/800x600/?city,concrete',
+    frontImage: 'https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=800&auto=format&fit=crop',
     backContent: 'Betonlaşma ve yeşil alanların azalması şehirlerde ısı birikimini artırıyor.',
     category: 'Neden'
   },
   {
     title: 'Kent Isı Adaları',
-    frontImage: 'https://source.unsplash.com/800x600/?city,heat',
+    frontImage: 'https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=800&auto=format&fit=crop',
     backContent: 'Şehir merkezleri çevre bölgelerden çok daha sıcak hale geliyor ve yaşam kalitesi düşüyor.',
     category: 'Sonuç'
   },
 
-  // Çift 8: Çözümler (Yenilenebilir Enerji ve Karbon Azaltımı)
+  // Çift 8: Çözümler
   {
     title: 'Yenilenebilir Enerji',
-    frontImage: 'https://source.unsplash.com/800x600/?solar,wind',
+    frontImage: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&auto=format&fit=crop',
     backContent: 'Güneş ve rüzgar gibi temiz enerji kaynakları karbon emisyonlarını azaltmaya yardımcı olur.',
     category: 'Çözüm'
   },
   {
     title: 'Sürdürülebilir Yaşam',
-    frontImage: 'https://source.unsplash.com/800x600/?electric,car',
+    frontImage: 'https://images.unsplash.com/photo-1532601224476-15c79f2f7a51?w=800&auto=format&fit=crop',
     backContent: 'Elektrikli araçlar ve enerji tasarruflu teknolojiler iklim değişikliğiyle mücadeleye katkı sağlar.',
     category: 'Çözüm'
   }
