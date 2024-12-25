@@ -8,30 +8,52 @@
       v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown"
       class="text-center q-mb-md setup-container"
     >
-      <h4 class="text-h4 q-mb-md text-white">Climate Change Memory Game</h4>
+      <h4 class="text-h4 q-mb-md text-white">İklim Değişikliği Hafıza Oyunu</h4>
+      <p class="text-subtitle1 text-white q-mb-lg">İklim değişikliğinin nedenleri ve sonuçlarını eşleştirin</p>
       <div class="row justify-center q-gutter-sm q-mb-md">
         <q-btn-group spread>
           <q-btn
             :color="store.gameMode === 'easy' ? 'white' : 'grey-2'"
             :text-color="store.gameMode === 'easy' ? 'primary' : 'grey-8'"
-            :label="isMobileView ? 'Easy' : 'Easy'"
             class="mode-btn"
             @click="selectMode('easy')"
-          />
+          >
+            <div class="column items-center">
+              <div class="text-subtitle1">Kolay</div>
+              <div class="row items-center q-mt-sm">
+                <q-icon name="casino" size="1.2em" class="q-mr-sm" />
+                <span>4 Çift</span>
+              </div>
+            </div>
+          </q-btn>
           <q-btn
             :color="store.gameMode === 'medium' ? 'white' : 'grey-2'"
             :text-color="store.gameMode === 'medium' ? 'primary' : 'grey-8'"
-            :label="isMobileView ? 'Medium' : 'Medium'"
             class="mode-btn"
             @click="selectMode('medium')"
-          />
+          >
+            <div class="column items-center">
+              <div class="text-subtitle1">Orta</div>
+              <div class="row items-center q-mt-sm">
+                <q-icon name="casino" size="1.2em" class="q-mr-sm" />
+                <span>6 Çift</span>
+              </div>
+            </div>
+          </q-btn>
           <q-btn
             :color="store.gameMode === 'hard' ? 'white' : 'grey-2'"
             :text-color="store.gameMode === 'hard' ? 'primary' : 'grey-8'"
-            :label="isMobileView ? 'Hard' : 'Hard'"
             class="mode-btn"
             @click="selectMode('hard')"
-          />
+          >
+            <div class="column items-center">
+              <div class="text-subtitle1">Zor</div>
+              <div class="row items-center q-mt-sm">
+                <q-icon name="casino" size="1.2em" class="q-mr-sm" />
+                <span>8 Çift</span>
+              </div>
+            </div>
+          </q-btn>
         </q-btn-group>
       </div>
       <q-btn
@@ -40,7 +62,7 @@
         color="white"
         text-color="primary"
         icon="play_arrow"
-        label="Start Game"
+        label="Oyunu Başlat"
         class="q-mt-sm q-px-xl start-btn"
         size="lg"
         @click="startCountdown"
@@ -51,7 +73,7 @@
     <div v-if="isCountingDown" class="countdown-screen">
       <div class="text-center">
         <h2 class="text-h2 countdown-number">{{ countdownNumber }}</h2>
-        <p class="text-h5 text-primary">Get Ready!</p>
+        <p class="text-h5 text-primary">Hazırlan!</p>
       </div>
     </div>
 
@@ -72,7 +94,7 @@
             <q-card flat bordered class="progress-card">
               <q-card-section class="row items-center">
                 <div class="progress-info q-mr-md">
-                  <div class="text-subtitle1">Progress</div>
+                  <div class="text-subtitle1">İlerleme</div>
                   <div class="text-h5 text-primary">
                     {{ store.matchedPairs }} / {{ store.totalPairs }}
                   </div>
@@ -125,7 +147,7 @@
           rounded
           color="negative"
           icon="restart_alt"
-          label="Reset Game"
+          label="Oyunu Sıfırla"
           @click="resetGame"
         />
       </div>
@@ -135,15 +157,15 @@
     <q-dialog v-model="showCompletionDialog" persistent>
       <q-card class="completion-card">
         <q-card-section class="row items-center q-pb-none bg-primary text-white">
-          <div class="text-h6">Congratulations! 🎉</div>
+          <div class="text-h6">Tebrikler! 🎉</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
 
         <q-card-section class="q-pt-lg">
           <div class="text-center">
-            <p class="text-h6 q-mb-md">Time: {{ formatTime(currentTime) }}</p>
-            <p class="text-subtitle1">Would you like to play again?</p>
+            <p class="text-h6 q-mb-md">Süre: {{ formatTime(currentTime) }}</p>
+            <p class="text-subtitle1">Tekrar oynamak ister misiniz?</p>
           </div>
         </q-card-section>
 
@@ -151,7 +173,7 @@
           <q-btn
             unelevated
             rounded
-            label="New Game"
+            label="Yeni Oyun"
             color="primary"
             class="q-px-xl"
             @click="startNewGame"
@@ -165,8 +187,7 @@
 <script setup lang="ts">
 import { useClimateStore } from '../stores/climate-store'
 import ClimateCard from '../components/ClimateCard.vue'
-import { onMounted, ref, watch, onUnmounted, computed } from 'vue'
-import { Platform } from 'quasar'
+import { onMounted, ref, watch, onUnmounted } from 'vue'
 
 const store = useClimateStore()
 const showCompletionDialog = ref(false)
@@ -174,11 +195,6 @@ const isCountingDown = ref(false)
 const countdownNumber = ref(3)
 const currentTime = ref(0)
 const showMatchSuccess = ref(false)
-
-// Check if mobile view
-const isMobileView = computed(() => {
-  return Platform.is.mobile || window.innerWidth < 600
-})
 
 // Timer interval reference
 let timerInterval: ReturnType<typeof setInterval> | null = null
@@ -332,11 +348,26 @@ onMounted(() => {
 }
 
 .mode-btn {
-  min-width: 100px;
-  font-weight: 600;
+  min-width: 120px;
+  padding: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .column {
+    min-height: 50px;
+  }
 
   @media (max-width: 599px) {
-    min-width: 60px;
+    min-width: 100px;
+    padding: 8px;
+
+    .text-subtitle1 {
+      font-size: 0.9rem;
+    }
   }
 }
 
