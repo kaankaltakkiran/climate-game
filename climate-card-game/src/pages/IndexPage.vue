@@ -99,7 +99,7 @@
               v-for="card in store.activeCards"
               :key="card.id"
               class="card-wrapper"
-              :class="{ 'is-matched': card.isMatched }"
+              :class="{ 'matched': card.isMatched }"
             >
               <q-slide-transition>
                 <ClimateCard
@@ -401,75 +401,31 @@ onMounted(() => {
   }
 }
 
-.match-success {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  z-index: 9999;
-  transition: all 0.3s ease;
-  pointer-events: none;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.3);
+.card-wrapper {
+  aspect-ratio: 3/4;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+  position: relative;
 
-  &.show {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-  }
-
-  &__content {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 2rem 3rem;
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(8px);
-    animation: matchPulse 1.5s ease-out;
-    min-width: 200px;
-    min-height: 150px;
-  }
-
-  &__icon {
-    animation: iconBounce 0.5s ease-out;
+  &.matched {
+    animation: matchedAnimation 2s forwards;
+    pointer-events: none;
   }
 }
 
-@keyframes matchPulse {
+@keyframes matchedAnimation {
   0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  20% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-  80% {
     transform: scale(1);
     opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0;
-  }
-}
-
-@keyframes iconBounce {
-  0% {
-    transform: scale(0.5);
   }
   50% {
-    transform: scale(1.2);
+    transform: scale(1.1);
+    opacity: 0.5;
   }
   100% {
-    transform: scale(1);
+    transform: scale(0);
+    opacity: 0;
+    display: none;
   }
 }
 
@@ -529,26 +485,6 @@ onMounted(() => {
   }
 }
 
-.card-wrapper {
-  aspect-ratio: 3/4;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center center;
-
-  &.matched {
-    opacity: 0;
-    transform: scale(0.8);
-    position: absolute;
-    pointer-events: none;
-    visibility: hidden;
-    width: 0;
-    height: 0;
-    margin: 0;
-    padding: 0;
-    grid-column: span 0;
-    grid-row: span 0;
-  }
-}
-
 .completion-card {
   width: 90%;
   max-width: 400px;
@@ -558,21 +494,6 @@ onMounted(() => {
 
   .q-card__section:first-child {
     border-radius: 12px 12px 0 0;
-  }
-}
-
-@keyframes matchedAnimation {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(0);
-    opacity: 0;
   }
 }
 
