@@ -56,32 +56,35 @@
     <div v-if="store.isPlaying" class="game-board">
       <!-- Timer and Progress Display -->
       <div class="timer-display q-mb-md">
-        <q-card flat bordered class="timer-card">
-          <q-card-section class="row items-center q-py-sm">
-            <q-icon name="timer" size="2rem" color="primary" class="q-mr-md"/>
-            <div class="text-h4 text-primary">{{ formatTime(currentTime) }}</div>
-          </q-card-section>
-        </q-card>
-        
-        <!-- Progress Indicator -->
-        <q-card flat bordered class="progress-card q-ml-md">
-          <q-card-section class="row items-center q-py-sm">
-            <div class="progress-info">
-              <div class="text-subtitle1">Progress</div>
-              <div class="text-h5 text-primary">{{ store.matchedPairs }} / {{ store.totalPairs }}</div>
-            </div>
-            <q-circular-progress
-              :value="(store.matchedPairs / store.totalPairs) * 100"
-              size="60px"
-              :thickness="0.2"
-              color="primary"
-              class="q-ml-md"
-              show-value
-            >
-              {{ Math.round((store.matchedPairs / store.totalPairs) * 100) }}%
-            </q-circular-progress>
-          </q-card-section>
-        </q-card>
+        <div class="row justify-center items-center q-col-gutter-md">
+          <div class="col-12 col-sm-auto">
+            <q-card flat bordered class="timer-card">
+              <q-card-section class="row items-center">
+                <q-icon name="timer" size="2rem" color="primary" class="q-mr-md"/>
+                <div class="text-h4 text-primary">{{ formatTime(currentTime) }}</div>
+              </q-card-section>
+            </q-card>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <q-card flat bordered class="progress-card">
+              <q-card-section class="row items-center">
+                <div class="progress-info q-mr-md">
+                  <div class="text-subtitle1">Progress</div>
+                  <div class="text-h5 text-primary">{{ store.matchedPairs }} / {{ store.totalPairs }}</div>
+                </div>
+                <q-circular-progress
+                  :value="(store.matchedPairs / store.totalPairs) * 100"
+                  size="60px"
+                  :thickness="0.2"
+                  color="primary"
+                  show-value
+                >
+                  {{ Math.round((store.matchedPairs / store.totalPairs) * 100) }}%
+                </q-circular-progress>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
       </div>
 
       <!-- Match Success Animation Container -->
@@ -335,27 +338,36 @@ onMounted(() => {
 }
 
 .timer-display {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
   margin-top: 0.5rem;
+
+  .row {
+    margin: 0 auto;
+    max-width: 800px;
+  }
 }
 
 .timer-card,
 .progress-card {
-  min-width: 180px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
 
   .q-card__section {
-    padding: 0.5rem 1.5rem;
+    padding: 1rem 1.5rem;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   @media (max-width: 599px) {
-    min-width: 140px;
-    
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+
     .text-h4 {
       font-size: 1.5rem;
     }
@@ -368,9 +380,11 @@ onMounted(() => {
 
 .progress-card {
   .progress-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    min-width: 100px;
+  }
+
+  .q-circular-progress {
+    min-width: 60px;
   }
 }
 
