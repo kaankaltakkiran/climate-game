@@ -54,7 +54,7 @@
 
     <!-- Game Board -->
     <div v-if="store.isPlaying" class="game-board">
-      <!-- Timer Display -->
+      <!-- Timer and Progress Display -->
       <div class="timer-display q-mb-md">
         <q-card flat bordered class="timer-card">
           <q-card-section class="row items-center q-py-sm">
@@ -62,6 +62,36 @@
             <div class="text-h4 text-primary">{{ formatTime(currentTime) }}</div>
           </q-card-section>
         </q-card>
+        
+        <!-- Progress Indicator -->
+        <q-card flat bordered class="progress-card q-ml-md">
+          <q-card-section class="row items-center q-py-sm">
+            <div class="progress-info">
+              <div class="text-subtitle1">Progress</div>
+              <div class="text-h5 text-primary">{{ store.matchedPairs }} / {{ store.totalPairs }}</div>
+            </div>
+            <q-circular-progress
+              :value="(store.matchedPairs / store.totalPairs) * 100"
+              size="60px"
+              :thickness="0.2"
+              color="primary"
+              class="q-ml-md"
+              show-value
+            >
+              {{ Math.round((store.matchedPairs / store.totalPairs) * 100) }}%
+            </q-circular-progress>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <!-- Match Success Animation Container -->
+      <div class="match-success" :class="{ 'show': showMatchSuccess }">
+        <div class="match-success__content">
+          <div class="match-success__icon">
+            <q-icon name="check_circle" color="positive" size="48px" />
+          </div>
+          <div class="text-h6 text-positive q-mt-sm">Match Found!</div>
+        </div>
       </div>
 
       <div class="cards-container">
@@ -136,6 +166,7 @@ const showCompletionDialog = ref(false);
 const isCountingDown = ref(false);
 const countdownNumber = ref(3);
 const currentTime = ref(0);
+const showMatchSuccess = ref(false);
 
 // Check if mobile view
 const isMobileView = computed(() => {
@@ -210,6 +241,21 @@ const startNewGame = () => {
   showCompletionDialog.value = false;
   store.initializeGame(store.gameMode);
 };
+
+// Add method to show match success animation
+const showMatchAnimation = () => {
+  showMatchSuccess.value = true;
+  setTimeout(() => {
+    showMatchSuccess.value = false;
+  }, 1500);
+};
+
+// Watch for changes in matchedPairs to trigger animation
+watch(() => store.matchedPairs, (newValue, oldValue) => {
+  if (newValue > oldValue) {
+    showMatchAnimation();
+  }
+});
 
 // Watch for game completion
 watch(() => store.isGameComplete, (isComplete) => {
@@ -291,10 +337,12 @@ onMounted(() => {
 .timer-display {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-top: 0.5rem;
 }
 
-.timer-card {
+.timer-card,
+.progress-card {
   min-width: 180px;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -315,6 +363,86 @@ onMounted(() => {
     .q-icon {
       font-size: 1.5rem !important;
     }
+  }
+}
+
+.progress-card {
+  .progress-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.match-success {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 9999;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+
+  &.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  &__content {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem 3rem;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    animation: matchPulse 1.5s ease-out;
+    min-width: 200px;
+    min-height: 150px;
+  }
+
+  &__icon {
+    animation: iconBounce 0.5s ease-out;
+  }
+}
+
+@keyframes matchPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes iconBounce {
+  0% {
+    transform: scale(0.5);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 

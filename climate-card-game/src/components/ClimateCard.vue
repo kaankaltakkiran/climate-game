@@ -1,7 +1,7 @@
 <template>
   <q-card
     class="climate-card"
-    :class="{ 'is-flipped': props.isFlipped }"
+    :class="{ 'is-flipped': props.isFlipped, 'matched': props.matched }"
     @click="emit('flip')"
     v-ripple
   >
@@ -68,6 +68,7 @@ interface Props {
   backContent: string;
   category: string;
   isFlipped: boolean;
+  matched: boolean;
 }
 
 const props = defineProps<Props>();
@@ -193,6 +194,28 @@ const getCategoryIcon = (category: string): string => {
       padding: 1.5rem;
     }
   }
+
+  &.matched {
+    animation: matchedAnimation 1.5s ease-out forwards;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(46, 213, 115, 0.8) 0%, rgba(46, 213, 115, 0) 70%);
+      z-index: 2;
+      opacity: 0;
+      animation: successGlow 1.5s ease-out forwards;
+    }
+
+    .climate-card__inner {
+      animation: successShake 0.5s ease-out;
+    }
+  }
 }
 
 .category-badge {
@@ -223,6 +246,33 @@ const getCategoryIcon = (category: string): string => {
 
   .q-icon {
     opacity: 0.9;
+  }
+}
+
+@keyframes successGlow {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes successShake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
   }
 }
 </style> 
