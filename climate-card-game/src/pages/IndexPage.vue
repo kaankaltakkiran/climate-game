@@ -4,7 +4,10 @@
     <div class="background-pattern"></div>
 
     <!-- Game Setup -->
-    <div v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown" class="text-center q-mb-md setup-container">
+    <div
+      v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown"
+      class="text-center q-mb-md setup-container"
+    >
       <h4 class="text-h4 q-mb-md text-white">Climate Change Memory Game</h4>
       <div class="row justify-center q-gutter-sm q-mb-md">
         <q-btn-group spread>
@@ -60,7 +63,7 @@
           <div class="col-12 col-sm-auto">
             <q-card flat bordered class="timer-card">
               <q-card-section class="row items-center">
-                <q-icon name="timer" size="2rem" color="primary" class="q-mr-md"/>
+                <q-icon name="timer" size="2rem" color="primary" class="q-mr-md" />
                 <div class="text-h4 text-primary">{{ formatTime(currentTime) }}</div>
               </q-card-section>
             </q-card>
@@ -70,7 +73,9 @@
               <q-card-section class="row items-center">
                 <div class="progress-info q-mr-md">
                   <div class="text-subtitle1">Progress</div>
-                  <div class="text-h5 text-primary">{{ store.matchedPairs }} / {{ store.totalPairs }}</div>
+                  <div class="text-h5 text-primary">
+                    {{ store.matchedPairs }} / {{ store.totalPairs }}
+                  </div>
                 </div>
                 <q-circular-progress
                   :value="(store.matchedPairs / store.totalPairs) * 100"
@@ -87,16 +92,6 @@
         </div>
       </div>
 
-      <!-- Match Success Animation Container -->
-      <div class="match-success" :class="{ 'show': showMatchSuccess }">
-        <div class="match-success__content">
-          <div class="match-success__icon">
-            <q-icon name="check_circle" color="positive" size="48px" />
-          </div>
-          <div class="text-h6 text-positive q-mt-sm">Match Found!</div>
-        </div>
-      </div>
-
       <div class="cards-container">
         <div class="cards-scroll">
           <TransitionGroup name="fade">
@@ -104,7 +99,7 @@
               v-for="card in store.activeCards"
               :key="card.id"
               class="card-wrapper"
-              :class="{ 'matched': card.isMatched }"
+              :class="{ 'is-matched': card.isMatched }"
             >
               <q-slide-transition>
                 <ClimateCard
@@ -168,124 +163,130 @@
 </template>
 
 <script setup lang="ts">
-import { useClimateStore } from '../stores/climate-store';
-import ClimateCard from '../components/ClimateCard.vue';
-import { onMounted, ref, watch, onUnmounted, computed } from 'vue';
-import { Platform } from 'quasar';
+import { useClimateStore } from '../stores/climate-store'
+import ClimateCard from '../components/ClimateCard.vue'
+import { onMounted, ref, watch, onUnmounted, computed } from 'vue'
+import { Platform } from 'quasar'
 
-const store = useClimateStore();
-const showCompletionDialog = ref(false);
-const isCountingDown = ref(false);
-const countdownNumber = ref(3);
-const currentTime = ref(0);
-const showMatchSuccess = ref(false);
+const store = useClimateStore()
+const showCompletionDialog = ref(false)
+const isCountingDown = ref(false)
+const countdownNumber = ref(3)
+const currentTime = ref(0)
+const showMatchSuccess = ref(false)
 
 // Check if mobile view
 const isMobileView = computed(() => {
-  return Platform.is.mobile || window.innerWidth < 600;
-});
+  return Platform.is.mobile || window.innerWidth < 600
+})
 
 // Timer interval reference
-let timerInterval: ReturnType<typeof setInterval> | null = null;
+let timerInterval: ReturnType<typeof setInterval> | null = null
 
 // Format time function
 const formatTime = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  return `${mins}:${secs.toString().padStart(2, '0')}`
+}
 
 // Start timer function
 const startTimer = () => {
-  if (timerInterval) clearInterval(timerInterval);
-  currentTime.value = 0;
+  if (timerInterval) clearInterval(timerInterval)
+  currentTime.value = 0
   timerInterval = setInterval(() => {
-    currentTime.value++;
-  }, 1000);
-};
+    currentTime.value++
+  }, 1000)
+}
 
 // Stop timer function
 const stopTimer = () => {
   if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
+    clearInterval(timerInterval)
+    timerInterval = null
   }
-};
+}
 
 // Game functions
 const selectMode = (mode: 'easy' | 'medium' | 'hard') => {
-  store.initializeGame(mode);
-};
+  store.initializeGame(mode)
+}
 
 const startCountdown = () => {
   if (!store.cards.length) {
-    store.initializeGame(store.gameMode);
+    store.initializeGame(store.gameMode)
   }
-  isCountingDown.value = true;
-  countdownNumber.value = 3;
+  isCountingDown.value = true
+  countdownNumber.value = 3
 
   const countdownInterval = setInterval(() => {
-    countdownNumber.value--;
+    countdownNumber.value--
     if (countdownNumber.value <= 0) {
-      clearInterval(countdownInterval);
-      isCountingDown.value = false;
-      startGame();
+      clearInterval(countdownInterval)
+      isCountingDown.value = false
+      startGame()
     }
-  }, 1000);
-};
+  }, 1000)
+}
 
 const startGame = () => {
-  store.startGame();
+  store.startGame()
   // Show all cards for 3 seconds before starting
-  store.cards.forEach(card => card.isFlipped = true);
+  store.cards.forEach((card) => (card.isFlipped = true))
   setTimeout(() => {
-    store.cards.forEach(card => card.isFlipped = false);
-    startTimer(); // Start the timer after cards are flipped back
-  }, 3000);
-};
+    store.cards.forEach((card) => (card.isFlipped = false))
+    startTimer() // Start the timer after cards are flipped back
+  }, 3000)
+}
 
 const resetGame = () => {
-  stopTimer();
-  store.resetCards();
-};
+  stopTimer()
+  store.resetCards()
+}
 
 const startNewGame = () => {
-  showCompletionDialog.value = false;
-  store.initializeGame(store.gameMode);
-};
+  showCompletionDialog.value = false
+  store.initializeGame(store.gameMode)
+}
 
 // Add method to show match success animation
 const showMatchAnimation = () => {
-  showMatchSuccess.value = true;
+  showMatchSuccess.value = true
   setTimeout(() => {
-    showMatchSuccess.value = false;
-  }, 1500);
-};
+    showMatchSuccess.value = false
+  }, 1500)
+}
 
 // Watch for changes in matchedPairs to trigger animation
-watch(() => store.matchedPairs, (newValue, oldValue) => {
-  if (newValue > oldValue) {
-    showMatchAnimation();
-  }
-});
+watch(
+  () => store.matchedPairs,
+  (newValue, oldValue) => {
+    if (newValue > oldValue) {
+      showMatchAnimation()
+    }
+  },
+)
 
 // Watch for game completion
-watch(() => store.isGameComplete, (isComplete) => {
-  if (isComplete) {
-    stopTimer();
-    showCompletionDialog.value = true;
-  }
-});
+watch(
+  () => store.isGameComplete,
+  (isComplete) => {
+    if (isComplete) {
+      stopTimer()
+      showCompletionDialog.value = true
+    }
+  },
+)
 
 // Clean up on component unmount
 onUnmounted(() => {
-  stopTimer();
-});
+  stopTimer()
+})
 
 // Initialize game on mount
 onMounted(() => {
-  store.initializeGame('easy');
-});
+  store.initializeGame('easy')
+})
 </script>
 
 <style lang="scss">
@@ -302,8 +303,11 @@ onMounted(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: 
-    radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.2) 2%, transparent 0%),
+  background-image: radial-gradient(
+      circle at 25px 25px,
+      rgba(255, 255, 255, 0.2) 2%,
+      transparent 0%
+    ),
     radial-gradient(circle at 75px 75px, rgba(255, 255, 255, 0.2) 2%, transparent 0%);
   background-size: 100px 100px;
   pointer-events: none;
@@ -330,7 +334,7 @@ onMounted(() => {
 .mode-btn {
   min-width: 100px;
   font-weight: 600;
-  
+
   @media (max-width: 599px) {
     min-width: 60px;
   }
@@ -510,14 +514,14 @@ onMounted(() => {
   width: 100%;
   overflow: hidden;
   padding: 1rem;
-  
+
   .cards-scroll {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1rem;
     width: 100%;
     transition: all 0.3s ease;
-    
+
     @media (max-width: 599px) {
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       gap: 0.5rem;
@@ -529,7 +533,7 @@ onMounted(() => {
   aspect-ratio: 3/4;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center center;
-  
+
   &.matched {
     opacity: 0;
     transform: scale(0.8);

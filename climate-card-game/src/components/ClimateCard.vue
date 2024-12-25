@@ -1,10 +1,10 @@
 <template>
   <q-card
     class="climate-card"
-    :class="{ 
+    :class="{
       'is-flipped': props.isFlipped,
       'is-matched': props.isMatched,
-      'is-error': props.showError
+      'is-error': props.showError,
     }"
     @click="handleFlip"
     v-ripple
@@ -13,15 +13,13 @@
       <div class="climate-card__front">
         <q-img
           :src="props.frontImage"
-          :ratio="16/9"
+          :ratio="16 / 9"
           class="climate-card__image"
           spinner-color="primary"
           spinner-size="82px"
         >
           <template v-slot:loading>
-            <div class="text-subtitle1 text-white">
-              Loading...
-            </div>
+            <div class="text-subtitle1 text-white">Loading...</div>
           </template>
         </q-img>
         <q-card-section class="q-pa-sm q-pa-md-md">
@@ -36,11 +34,7 @@
               rounded
               outline
             >
-              <q-icon
-                :name="getCategoryIcon(props.category)"
-                size="14px"
-                class="q-mr-xs"
-              />
+              <q-icon :name="getCategoryIcon(props.category)" size="14px" class="q-mr-xs" />
               {{ props.category }}
             </q-badge>
           </div>
@@ -64,10 +58,10 @@
 
     <!-- Match Status Overlay -->
     <transition name="fade">
-      <div 
+      <div
         v-if="props.isMatched || props.showError"
         class="match-status"
-        :class="{ 'error': props.showError }"
+        :class="{ error: props.showError }"
       >
         <div class="match-status__content">
           <q-icon
@@ -86,46 +80,46 @@
 
 <script setup lang="ts">
 interface Props {
-  id: number;
-  title: string;
-  frontImage: string;
-  backContent: string;
-  category: string;
-  isFlipped: boolean;
-  isMatched?: boolean;
-  showError?: boolean;
+  id: number
+  title: string
+  frontImage: string
+  backContent: string
+  category: string
+  isFlipped: boolean
+  isMatched?: boolean
+  showError?: boolean
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 const emit = defineEmits<{
   flip: [cardId: number]
-}>();
+}>()
 
 const handleFlip = () => {
-  emit('flip', props.id);
-};
+  emit('flip', props.id)
+}
 
 const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
-    'Neden': 'red',
-    'Sonuç': 'orange',
-    'Çözüm': 'green'
-  };
-  return colors[category] || 'grey-7';
-};
+    Neden: 'red',
+    Sonuç: 'orange',
+    Çözüm: 'green',
+  }
+  return colors[category] || 'grey-7'
+}
 
 const getCategoryClass = (category: string): string => {
-  return `category-${category.toLowerCase()}`;
-};
+  return `category-${category.toLowerCase()}`
+}
 
 const getCategoryIcon = (category: string): string => {
   const icons: Record<string, string> = {
-    'Neden': 'warning',
-    'Sonuç': 'insights',
-    'Çözüm': 'eco'
-  };
-  return icons[category] || 'label';
-};
+    Neden: 'warning',
+    Sonuç: 'insights',
+    Çözüm: 'eco',
+  }
+  return icons[category] || 'label'
+}
 </script>
 
 <style lang="scss">
@@ -217,7 +211,7 @@ const getCategoryIcon = (category: string): string => {
 
   &.is-error {
     animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-    
+
     .match-status {
       background: rgba(231, 76, 60, 0.9);
     }
@@ -231,19 +225,19 @@ const getCategoryIcon = (category: string): string => {
   letter-spacing: 0.5px;
   text-transform: uppercase;
   border-radius: 20px;
-  
+
   &.category-neden {
     color: #fff !important;
     background: linear-gradient(135deg, #ff4444 0%, #ff6b6b 100%);
     border: none;
   }
-  
+
   &.category-sonuç {
     color: #fff !important;
     background: linear-gradient(135deg, #ff9f43 0%, #ffbe76 100%);
     border: none;
   }
-  
+
   &.category-çözüm {
     color: #fff !important;
     background: linear-gradient(135deg, #2ecc71 0%, #55efc4 100%);
@@ -255,58 +249,63 @@ const getCategoryIcon = (category: string): string => {
 }
 
 .match-status {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  border-radius: 12px;
-  backdrop-filter: blur(4px);
-  transition: all 0.3s ease;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 10 !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(4px) !important;
+  transition: all 0.3s ease !important;
 
   &__content {
-    text-align: center;
-    padding: 1rem;
-    color: white;
-    transform: scale(0.9);
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    text-align: center !important;
+    padding: 1rem !important;
+    color: white !important;
+    transform: scale(0.9) !important;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
   }
 
   &__text {
-    margin-top: 0.5rem;
-    font-size: 1rem;
-    font-weight: 600;
+    margin-top: 0.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
 
     @media (min-width: 600px) {
-      font-size: 1.2rem;
+      font-size: 1.2rem !important;
     }
   }
 
   .q-icon {
-    font-size: 2rem;
+    font-size: 2rem !important;
 
     @media (min-width: 600px) {
-      font-size: 2.5rem;
+      font-size: 2.5rem !important;
     }
   }
 }
 
 // Animations
 @keyframes shake {
-  10%, 90% {
+  10%,
+  90% {
     transform: translate3d(-1px, 0, 0);
   }
-  20%, 80% {
+  20%,
+  80% {
     transform: translate3d(2px, 0, 0);
   }
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(-3px, 0, 0);
   }
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(3px, 0, 0);
   }
 }
@@ -331,4 +330,4 @@ const getCategoryIcon = (category: string): string => {
 .fade-leave-to {
   opacity: 0;
 }
-</style> 
+</style>
