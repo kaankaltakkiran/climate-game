@@ -99,19 +99,28 @@
 
       <div class="cards-container">
         <div class="cards-scroll">
-          <div
-            v-for="card in store.activeCards"
-            :key="card.id"
-            class="card-wrapper"
-            :class="{ 'matched': card.isMatched }"
-          >
-            <q-slide-transition>
-              <ClimateCard
-                v-bind="card"
-                @flip="store.toggleCard(card.id)"
-              />
-            </q-slide-transition>
-          </div>
+          <TransitionGroup name="fade">
+            <div
+              v-for="card in store.activeCards"
+              :key="card.id"
+              class="card-wrapper"
+              :class="{ 'matched': card.isMatched }"
+            >
+              <q-slide-transition>
+                <ClimateCard
+                  :id="card.id"
+                  :title="card.title"
+                  :frontImage="card.frontImage"
+                  :backContent="card.backContent"
+                  :category="card.category"
+                  :isFlipped="card.isFlipped"
+                  :isMatched="card.isMatched"
+                  :showError="card.showError"
+                  @flip="store.toggleCard(card.id)"
+                />
+              </q-slide-transition>
+            </div>
+          </TransitionGroup>
         </div>
       </div>
 
@@ -498,46 +507,41 @@ onMounted(() => {
 }
 
 .cards-container {
-  position: relative;
   width: 100%;
-  padding: 0.5rem;
-  z-index: 1;
-
-  @media (min-width: 600px) {
-    padding: 1rem 0;
-  }
-}
-
-.cards-scroll {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-
-  @media (min-width: 600px) {
+  overflow: hidden;
+  padding: 1rem;
+  
+  .cards-scroll {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1rem;
-    padding: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    
+    @media (max-width: 599px) {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.5rem;
+    }
   }
 }
 
 .card-wrapper {
-  flex: 0 0 auto;
-  width: calc(50% - 0.5rem);
-  height: 200px;
-  transition: all 0.3s ease;
-
-  @media (min-width: 600px) {
-    width: 300px;
-    height: 400px;
-  }
-
-  &:hover {
-    transform: scale(1.02);
-  }
-
+  aspect-ratio: 3/4;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+  
   &.matched {
-    animation: matchedAnimation 1.5s ease-out forwards;
+    opacity: 0;
+    transform: scale(0.8);
+    position: absolute;
+    pointer-events: none;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    grid-column: span 0;
+    grid-row: span 0;
   }
 }
 
@@ -566,5 +570,32 @@ onMounted(() => {
     transform: scale(0);
     opacity: 0;
   }
+}
+
+@keyframes fadeOutScale {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.fade-leave-active {
+  position: absolute;
 }
 </style>

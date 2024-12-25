@@ -1,8 +1,12 @@
 <template>
   <q-card
     class="climate-card"
-    :class="{ 'is-flipped': props.isFlipped }"
-    @click="emit('flip')"
+    :class="{ 
+      'is-flipped': props.isFlipped,
+      'is-matched': props.isMatched,
+      'is-error': props.showError
+    }"
+    @click="handleFlip"
     v-ripple
   >
     <div class="climate-card__inner">
@@ -52,11 +56,31 @@
             color="primary"
             icon="refresh"
             class="absolute-bottom-right q-mb-xs q-mr-xs"
-            @click.stop="emit('flip')"
+            @click.stop="handleFlip"
           />
         </q-card-section>
       </div>
     </div>
+
+    <!-- Match Status Overlay -->
+    <transition name="fade">
+      <div 
+        v-if="props.isMatched || props.showError"
+        class="match-status"
+        :class="{ 'error': props.showError }"
+      >
+        <div class="match-status__content">
+          <q-icon
+            :name="props.isMatched ? 'check_circle' : 'error'"
+            :color="props.isMatched ? 'positive' : 'negative'"
+            size="2em"
+          />
+          <div class="match-status__text">
+            {{ props.isMatched ? 'Eşleşme Bulundu!' : 'Eşleşme Bulunamadı!' }}
+          </div>
+        </div>
+      </div>
+    </transition>
   </q-card>
 </template>
 
@@ -68,11 +92,19 @@ interface Props {
   backContent: string;
   category: string;
   isFlipped: boolean;
+  isMatched?: boolean;
+  showError?: boolean;
 }
+
 const props = defineProps<Props>();
 const emit = defineEmits<{
-  flip: [] // event with no payload
+  flip: [cardId: number]
 }>();
+
+const handleFlip = () => {
+  emit('flip', props.id);
+};
+
 const getCategoryColor = (category: string): string => {
   const colors: Record<string, string> = {
     'Neden': 'red',
@@ -81,9 +113,11 @@ const getCategoryColor = (category: string): string => {
   };
   return colors[category] || 'grey-7';
 };
+
 const getCategoryClass = (category: string): string => {
   return `category-${category.toLowerCase()}`;
 };
+
 const getCategoryIcon = (category: string): string => {
   const icons: Record<string, string> = {
     'Neden': 'warning',
@@ -176,7 +210,20 @@ const getCategoryIcon = (category: string): string => {
       padding: 1.5rem;
     }
   }
+
+  &.is-matched .match-status {
+    background: rgba(46, 204, 113, 0.9);
+  }
+
+  &.is-error {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    
+    .match-status {
+      background: rgba(231, 76, 60, 0.9);
+    }
+  }
 }
+
 .category-badge {
   font-size: 0.8rem;
   padding: 4px 12px;
@@ -205,5 +252,83 @@ const getCategoryIcon = (category: string): string => {
   .q-icon {
     opacity: 0.9;
   }
+}
+
+.match-status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+
+  &__content {
+    text-align: center;
+    padding: 1rem;
+    color: white;
+    transform: scale(0.9);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  &__text {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+
+    @media (min-width: 600px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  .q-icon {
+    font-size: 2rem;
+
+    @media (min-width: 600px) {
+      font-size: 2.5rem;
+    }
+  }
+}
+
+// Animations
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-3px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(3px, 0, 0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style> 

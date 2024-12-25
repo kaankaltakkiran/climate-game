@@ -117,7 +117,7 @@ const allCards: Omit<ClimateCard, 'id' | 'isFlipped' | 'isMatched' | 'matchId'>[
 ];
 
 export const useClimateStore = defineStore('climate', {
-  state: (): GameState => ({
+  state: (): GameState & { errorCards: number[] } => ({
     cards: [],
     gameMode: 'easy',
     isPlaying: false,
@@ -125,7 +125,8 @@ export const useClimateStore = defineStore('climate', {
     endTime: null,
     flippedCards: [],
     matchedPairs: 0,
-    totalPairs: 0
+    totalPairs: 0,
+    errorCards: [] // Track cards that don't match
   }),
 
   getters: {
@@ -137,8 +138,11 @@ export const useClimateStore = defineStore('climate', {
     isGameComplete: (state): boolean => {
       return state.matchedPairs === state.totalPairs && state.totalPairs > 0;
     },
-    activeCards: (state): ClimateCard[] => {
-      return state.cards.filter(card => !card.isMatched);
+    activeCards: (state): (ClimateCard & { showError: boolean })[] => {
+      return state.cards.map(card => ({
+        ...card,
+        showError: state.errorCards.includes(card.id)
+      }));
     }
   },
 
@@ -201,42 +205,46 @@ export const useClimateStore = defineStore('climate', {
     toggleCard(cardId: number) {
       if (!this.isPlaying) return;
       
-      // Prevent flipping if two cards are already flipped or the clicked card is already flipped/matched
-      const card = this.cards.find(c => c.id === cardId);
-      if (!card || 
-          card.isMatched || 
-          card.isFlipped || 
+      const currentCard = this.cards.find(card => card.id === cardId);
+      if (!currentCard || 
+          currentCard.isMatched || 
+          currentCard.isFlipped || 
           this.flippedCards.length >= 2 ||
           this.flippedCards.includes(cardId)) return;
 
+      // Clear any existing error states
+      this.errorCards = [];
+      
       // Flip the card
-      card.isFlipped = true;
+      currentCard.isFlipped = true;
       this.flippedCards.push(cardId);
 
       if (this.flippedCards.length === 2) {
         const [firstId, secondId] = this.flippedCards;
-        const firstCard = this.cards.find(c => c.id === firstId);
-        const secondCard = this.cards.find(c => c.id === secondId);
+        const firstCard = this.cards.find(card => card.id === firstId);
+        const secondCard = this.cards.find(card => card.id === secondId);
 
         if (firstCard && secondCard && firstCard.matchId === secondCard.matchId) {
-          // Eşleşme başarılı - kartları 3 saniye göster
+          // Match found - show cards for 1.5 seconds
           setTimeout(() => {
-            firstCard.isMatched = true;
-            secondCard.isMatched = true;
+            if (firstCard) firstCard.isMatched = true;
+            if (secondCard) secondCard.isMatched = true;
             this.matchedPairs++;
-            this.flippedCards = []; // Clear flipped cards array
+            this.flippedCards = [];
 
             if (this.matchedPairs === this.totalPairs) {
               this.endTime = Date.now();
             }
-          }, 3000); // 3000ms = 3 saniye
+          }, 1500);
         } else {
-          // Eşleşme başarısız - kartları 1.5 saniye göster
+          // No match - show error state for 1.5 seconds
+          this.errorCards = [firstId, secondId];
           setTimeout(() => {
             if (firstCard) firstCard.isFlipped = false;
             if (secondCard) secondCard.isFlipped = false;
-            this.flippedCards = []; // Clear flipped cards array
-          }, 1500); // Eşleşmeyen kartları görmek için daha fazla süre
+            this.flippedCards = [];
+            this.errorCards = [];
+          }, 1500);
         }
       }
     }
