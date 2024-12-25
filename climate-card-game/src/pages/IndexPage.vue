@@ -8,8 +8,10 @@
       v-if="!store.isPlaying && !store.isGameComplete && !isCountingDown"
       class="text-center q-mb-md setup-container"
     >
-      <h4 class="text-h4 q-mb-md text-white">İklim Değişikliği Hafıza Oyunu</h4>
-      <p class="text-subtitle1 text-white q-mb-lg">İklim değişikliğinin nedenleri ve sonuçlarını eşleştirin</p>
+      <h4 class="text-h4 q-mb-md text-white">İklim Değişikliği Kart Oyunu</h4>
+      <p class="text-subtitle1 text-white q-mb-lg">
+        Oyunu kolay, orta veya zor seviyelerden seçerek baslatabilirsiniz.
+      </p>
       <div class="row justify-center q-gutter-sm q-mb-md">
         <q-btn-group spread>
           <q-btn
@@ -121,7 +123,7 @@
               v-for="card in store.activeCards"
               :key="card.id"
               class="card-wrapper"
-              :class="{ 'matched': card.isMatched }"
+              :class="{ matched: card.isMatched }"
             >
               <q-slide-transition>
                 <ClimateCard
